@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smart_wrong_notebook/src/app/providers.dart';
@@ -62,6 +63,15 @@ class DataManagementScreen extends ConsumerWidget {
               onTap: questions.isEmpty
                   ? null
                   : () => _exportQuestions(context, questions),
+            ),
+            const SizedBox(height: 8),
+            _DataCard(
+              icon: CupertinoIcons.doc_on_doc,
+              title: '导出 PDF 文稿',
+              subtitle: '将错题生成 A4 格式 PDF，可打印或分享',
+              onTap: questions.isEmpty
+                  ? null
+                  : () => context.go('/export/pdf'),
             ),
             const SizedBox(height: 8),
             _DataCard(

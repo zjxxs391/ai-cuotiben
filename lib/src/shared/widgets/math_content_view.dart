@@ -114,7 +114,7 @@ class MathContentView extends StatelessWidget {
   }
 
   Widget _katexFallback(String tex, TextStyle ts) {
-    final plain = Text(_toReadable(tex), style: ts);
+    final plain = Text(latexToReadable(tex), style: ts);
     if (!KatexMathView.enabled) return plain;
     return KatexMathView(tex, fallback: plain);
   }
@@ -326,7 +326,7 @@ class MathContentView extends StatelessWidget {
       RegExp(r'(?<![A-Za-z\\])(?:angle|triangle|circ|times|div|pm)(?=\b|[0-9])');
   static final _reSpaces = RegExp(r'[ \t]+');
 
-  static const _symbols = {
+  static const kKnownSymbols = {
     'angle': '∠', 'triangle': '△', 'circ': '°', 'pm': '±', 'mp': '∓',
     'times': '×', 'div': '÷', 'cdot': '·', 'leq': '≤', 'geq': '≥',
     'neq': '≠', 'approx': '≈', 'equiv': '≡', 'sim': '∼',
@@ -349,7 +349,7 @@ class MathContentView extends StatelessWidget {
     'cup': '∪', 'cap': '∩',
   };
 
-  String _toReadable(String v) {
+  static String latexToReadable(String v) {
     return v
         .replaceAll(_reBeginEnd, '')
         .replaceAll(r'\newline', '\n')
@@ -361,11 +361,11 @@ class MathContentView extends StatelessWidget {
         .replaceAllMapped(_reMatrm, (m) => m.group(1)!)
         .replaceAllMapped(_reCmd, (m) {
           final c = m.group(1)!;
-          if (_symbols.containsKey(c)) return _symbols[c]!;
+          if (kKnownSymbols.containsKey(c)) return kKnownSymbols[c]!;
           return _supported.contains(c) ? '' : c;
         })
         .replaceAllMapped(
-            _reNakedSymbols, (m) => _symbols[m.group(0)!] ?? m.group(0)!)
+            _reNakedSymbols, (m) => kKnownSymbols[m.group(0)!] ?? m.group(0)!)
         .replaceAll(r'\x', 'x')
         .replaceAll(r'\{', '{')
         .replaceAll(r'\}', '}')
@@ -382,7 +382,7 @@ class MathContentView extends StatelessWidget {
     final stripped = norm
         .replaceAll(_reDisplay, r' $1 ')
         .replaceAllMapped(_reInline, (m) => ' ${m.group(1)} ');
-    return _toReadable(stripped).replaceAll(_reWS, ' ').trim();
+    return latexToReadable(stripped).replaceAll(_reWS, ' ').trim();
   }
 }
 

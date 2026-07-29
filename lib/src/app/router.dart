@@ -19,6 +19,7 @@ import 'package:smart_wrong_notebook/src/features/ocr/presentation/question_spli
 import 'package:smart_wrong_notebook/src/features/analysis/presentation/analysis_loading_screen.dart';
 import 'package:smart_wrong_notebook/src/features/analysis/presentation/analysis_result_screen.dart';
 import 'package:smart_wrong_notebook/src/features/analysis/presentation/exercise_practice_screen.dart';
+import 'package:smart_wrong_notebook/src/features/export/pdf_export_screen.dart';
 import 'package:smart_wrong_notebook/src/data/repositories/settings_repository.dart';
 
 GoRouter buildRouter(SettingsRepository settingsRepo) {
@@ -102,6 +103,9 @@ GoRouter buildRouter(SettingsRepository settingsRepo) {
       GoRoute(
           path: '/review/history',
           pageBuilder: (_, __) => _buildPage(const ReviewHistoryScreen())),
+      GoRoute(
+          path: '/export/pdf',
+          builder: (_, __) => const PdfExportScreen()),
     ],
   );
 }

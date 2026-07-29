@@ -25,6 +25,7 @@ import 'package:smart_wrong_notebook/src/features/analysis/presentation/analysis
 import 'package:smart_wrong_notebook/src/features/analysis/presentation/analysis_result_screen.dart';
 import 'package:smart_wrong_notebook/src/features/analysis/presentation/exercise_practice_screen.dart';
 import 'package:smart_wrong_notebook/src/features/review/presentation/review_history_screen.dart';
+import 'package:smart_wrong_notebook/src/features/export/pdf_export_screen.dart';
 import 'package:smart_wrong_notebook/src/data/files/image_storage_service.dart';
 import 'package:smart_wrong_notebook/src/shared/widgets/katex_math_view.dart';
 
@@ -107,6 +108,9 @@ void main() async {
       GoRoute(
           path: '/review/history',
           builder: (context, state) => const ReviewHistoryScreen()),
+      GoRoute(
+          path: '/export/pdf',
+          builder: (context, state) => const PdfExportScreen()),
     ],
   );
 

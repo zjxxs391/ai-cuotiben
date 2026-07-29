@@ -68,6 +68,11 @@ class _NotebookScreenState extends ConsumerState<NotebookScreen> {
             ),
             tooltip: '添加错题',
           ),
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: () => context.go('/export/pdf'),
+            tooltip: '导出 PDF',
+          ),
         ],
       ),
       body: Column(
@@ -161,6 +166,32 @@ class _NotebookScreenState extends ConsumerState<NotebookScreen> {
                 ],
               ],
             ),
+          ),
+          const SizedBox(height: 8),
+          // Export action bar
+          questionsAsync.when(
+            data: (questions) {
+              if (questions.isEmpty) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => context.go('/export/pdf'),
+                    icon: const Icon(Icons.picture_as_pdf, size: 18),
+                    label: const Text('导出 PDF 文稿'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
           ),
           const SizedBox(height: 8),
           // List
