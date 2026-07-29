@@ -41,12 +41,14 @@ jobs:
       - name: Build release APK
         run: flutter build apk --release
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-wrong-notebook-android
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
+      - name: Upload APK to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_TAG="auto-build-${{ github.run_number }}-$(date +%Y%m%d)"
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 || \
+          gh release create "$RELEASE_TAG" --title "AI错题本 自动构建 #${{ github.run_number }}" --notes "自动构建的 Android 版本" --prerelease
+          gh release upload "$RELEASE_TAG" build/app/outputs/flutter-apk/app-release.apk --clobber
 
   build-windows:
     runs-on: windows-latest
@@ -67,9 +69,17 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
 
-      - name: Upload Windows
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-wrong-notebook-windows
-          path: build/windows/runner/Release
-          retention-days: 30
+      - name: Create ZIP archive
+        run: |
+          cd build/windows/runner/Release
+          7z a ../../../ai-wrong-notebook-windows.zip *
+        shell: cmd
+
+      - name: Upload Windows to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_TAG="auto-build-${{ github.run_number }}-$(date +%Y%m%d)"
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 || \
+          gh release create "$RELEASE_TAG" --title "AI错题本 自动构建 #${{ github.run_number }}" --notes "自动构建的 Windows 版本" --prerelease
+          gh release upload "$RELEASE_TAG" ai-wrong-notebook-windows.zip --clobber
